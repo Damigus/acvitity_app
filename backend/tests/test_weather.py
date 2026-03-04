@@ -30,3 +30,13 @@ def test_zla_data_przeszlosc_prawdziwe_api():
     assert wynik["temperature"] == 0
     assert wynik["windspeed"] == 0
     assert wynik["precipitation"] == 0
+
+def test_zla_data_przyszlosc_prawdziwe_api():
+    # dajemy date z przyszlosci
+    # prawdziwe api ma na max 16 dni ale my bierzemy tylko 14 dni wiec daje date 15 dni do przodu
+    wynik = get_weather_data("Warszawa", "2026-03-20", "12:00")
+    
+    # nasz kod w weather py w razie braku daty (nie znalezienia daty w bazie) w time zwraca same zera
+    assert wynik["temperature"] == 0
+    assert wynik["windspeed"] == 0
+    assert wynik["precipitation"] == 0

@@ -333,8 +333,8 @@ pytest
 ### Uruchomienie konkretnych testów:
 
 ```powershell
-# Testy jednostkowe pogody
-pytest tests/test_unit_weather.py -v
+# Testy api pogody
+pytest tests/test_weather.py -v
 
 # Testy integracyjne autoryzacji
 pytest tests/test_integration_auth.py -v
@@ -343,7 +343,7 @@ pytest tests/test_integration_auth.py -v
 pytest tests/test_integration_activities.py -v
 
 # Testy z mockowaną bazą
-pytest tests/test_mocked_db.py -v
+pytest tests/unit_tests_db.py -v
 ```
 
 ### Pokrycie testami:

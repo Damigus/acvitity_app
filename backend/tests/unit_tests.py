@@ -3,14 +3,11 @@ import json
 import os
 import sys
 
-# Dodajemy folder backend do ścieżki, żeby Python widział nasze pliki
 sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
 
-# Importujemy funkcje, które chcemy przetestować
 from routes.auth import sprawdz_rejestracje, sprawdz_logowanie
 from routes.activities import przygotuj_aktywnosc
 
-# Ścieżki do naszych plików z "udanymi" danymi
 MOCK_DATA_DIR = os.path.join(os.path.dirname(__file__), 'mock_data')
 USERS_FILE = os.path.join(MOCK_DATA_DIR, 'users.json')
 WEATHER_FILE = os.path.join(MOCK_DATA_DIR, 'weather.json')
@@ -28,10 +25,8 @@ def stworz_baze_z_pliku():
     # Lista na dane, które "zapiszemy" w trakcie testu
     zapisane_w_tescie = []
 
-    # Udajemy funkcję find_one
     def udawane_find_one(szukane):
         for u in dane_z_pliku:
-            # Sprawdzamy czy username i password pasują
             if all(u.get(k) == v for k, v in szukane.items()):
                 return u
         return None
@@ -40,8 +35,19 @@ def stworz_baze_z_pliku():
     def udawane_insert_one(nowy_obiekt):
         zapisane_w_tescie.append(nowy_obiekt)
 
-    users_mock = type('Users', (), {'find_one': udawane_find_one, 'insert_one': udawane_insert_one})
-    return type('Database', (), {'users': users_mock, 'zapisane': zapisane_w_tescie})
+
+    class PustyObiekt:
+        pass
+
+    baza = PustyObiekt()
+    baza.users = PustyObiekt()
+    
+    # Doczepiamy nasze udawane funkcje i listę do obiektu
+    baza.users.find_one = udawane_find_one
+    baza.users.insert_one = udawane_insert_one
+    baza.zapisane = zapisane_w_tescie
+    
+    return baza
 
 # --- TESTY LOGOWANIA (PARAMETRYZOWANE) ---
 
@@ -76,7 +82,6 @@ def test_jednostkowy_rejestracja(nowy_login, czy_zajety):
         assert kod == 200
         assert wynik["success"] is True
 
-# --- TESTY POGODY I DODAWANIA WPISU ---
 
 def test_jednostkowy_pogoda_z_pliku():
     """Testujemy czy funkcja czytająca pogodę z pliku działa"""
@@ -85,20 +90,25 @@ def test_jednostkowy_pogoda_z_pliku():
     assert pogoda_z_pliku[miasto]["temperature"] == 15
 
 def test_jednostkowy_dodawanie_aktywnosci():
-    """Testujemy logikę tworzenia nowej aktywności z pogodą"""
-    # Udajemy funkcję pogodową, która czyta z naszego pliku JSON
+    """Testujemy logikę tworzenia nowej aktywności z pogodą (ręczna podmiana)"""
     def udawana_pogoda(miasto, data, czas):
         dane = wczytaj_dane(WEATHER_FILE)
         return dane.get(miasto, {"temperature": 0})
 
-    # Wywołujemy funkcję logiczną z activities.py
-    nowa_act = przygotuj_aktywnosc(
-        "adam", "Bieganie", "Warszawa", "Fajny trening", 
-        "2026-03-04", "10:00", udawana_pogoda
-    )
-    
-    # Sprawdzamy czy dane się zgadzają (temperatura 15 jest w weather.json dla Warszawy)
-    assert nowa_act["name"] == "Bieganie"
-    assert nowa_act["temperature"] == 15
-    assert nowa_act["username"] == "adam"
+    import routes.activities
+    oryginalna_funkcja = routes.activities.get_weather_data # Zapisujemy oryginał!
+    routes.activities.get_weather_data = udawana_pogoda     # Podmieniamy na naszą
+
+    try:
+        nowa_act = przygotuj_aktywnosc(
+            "adam", "Bieganie", "Warszawa", "Fajny trening", 
+            "2026-03-04", "10:00"
+        )
+        
+        assert nowa_act["name"] == "Bieganie"
+        assert nowa_act["temperature"] == 15
+        assert nowa_act["username"] == "adam"
+    finally:
+
+        routes.activities.get_weather_data = oryginalna_funkcja
 

@@ -6,7 +6,6 @@ from routes.activities import activities_bp
 app = Flask(__name__)
 CORS(app)
 
-# rejestracja blueprintow
 app.register_blueprint(auth_bp, url_prefix='/api')
 app.register_blueprint(activities_bp, url_prefix='/activity')
 

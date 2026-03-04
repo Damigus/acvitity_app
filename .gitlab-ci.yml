@@ -18,7 +18,7 @@ install_backend_dependencies:
     - cd backend
     - python -m venv venv
     - source venv/bin/activate
-    - pip install -r requirements.txt
+    - pip install -r requirements.txt pytest-cov
   artifacts:
     paths:
       - backend/venv
@@ -35,7 +35,7 @@ install_frontend_dependencies:
     expire_in: 1h
 
 # testy
-test_unit_weather:
+test_weather:
   stage: test
   image: python:3.10
   dependencies:
@@ -43,7 +43,7 @@ test_unit_weather:
   script:
     - cd backend
     - source venv/bin/activate
-    - pytest --cov=. --cov-report=xml:coverage-weather.xml --junitxml=report-weather.xml tests/test_unit_weather.py
+    - pytest --cov=. --cov-report=xml:coverage-weather.xml --junitxml=report-weather.xml tests/test_weather.py
   artifacts:
     reports:
       coverage_report:
@@ -51,7 +51,7 @@ test_unit_weather:
         path: backend/coverage-weather.xml
       junit: backend/report-weather.xml
 
-test_mocked_db:
+unit_tests:
   stage: test
   image: python:3.10
   dependencies:
@@ -59,7 +59,7 @@ test_mocked_db:
   script:
     - cd backend
     - source venv/bin/activate
-    - pytest --cov=. --cov-report=xml:coverage-mocked.xml --junitxml=report-mocked.xml tests/test_mocked_db.py
+    - pytest --cov=. --cov-report=xml:coverage-mocked.xml --junitxml=report-mocked.xml tests/unit_tests.py
   artifacts:
     reports:
       coverage_report:

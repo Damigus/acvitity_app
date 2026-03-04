@@ -9,9 +9,9 @@ db = get_db()
 
 # --- LOGIKA BIZNESOWA (to testujemy jednostkowo) ---
 
-def przygotuj_aktywnosc(username, name, city, description, planned_date, planned_time, weather_func):
+def przygotuj_aktywnosc(username, name, city, description, planned_date, planned_time):
     """Tworzy słownik z nową aktywnością, pobierając pogodę"""
-    weather = weather_func(city, planned_date, planned_time)
+    weather = get_weather_data(city, planned_date, planned_time)
     
     return {
         "username": username,
@@ -49,8 +49,7 @@ def add_activity():
         data['city'], 
         data.get('description'), 
         data.get('planned_date'), 
-        data.get('planned_time'),
-        get_weather_data
+        data.get('planned_time')
     )
     
     db.activities.insert_one(nowa_act)

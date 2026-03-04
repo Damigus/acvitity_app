@@ -21,7 +21,7 @@ def get_weather_data(city_name, planned_date=None, planned_time=None):
                 "precipitation": data['current']['precipitation']
             }
         
-        # prognoza godzinowa do 14 dni
+        # prognoza godzinowa do 14 dni / maksymalnie do 16 w api ale wybralem 14 bo ladna liczba
         url = f"https://api.open-meteo.com/v1/forecast?latitude={coords['lat']}&longitude={coords['lon']}&hourly=temperature_2m,windspeed_10m,precipitation&timezone=auto&forecast_days=14"
         response = requests.get(url, timeout=5)
         data = response.json()
