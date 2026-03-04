@@ -1,0 +1,90 @@
+services:
+  - name: mongo:6
+    alias: mongo
+
+variables:
+  MONGO_URI: mongodb://mongo:27017/testdb
+
+stages:
+  - install
+  - test
+  - build
+
+# paczki
+install_backend_dependencies:
+  stage: install
+  image: python:3.10
+  script:
+    - cd backend
+    - python -m venv venv
+    - source venv/bin/activate
+    - pip install -r requirements.txt
+  artifacts:
+    paths:
+      - backend/venv
+    expire_in: 1h
+
+install_frontend_dependencies:
+  stage: install
+  image: node:20
+  script:
+    - cd frontend
+    - npm install
+  artifacts:
+    paths:
+      - frontend/node_modules
+    expire_in: 1h
+
+# testy
+test_unit_weather:
+  stage: test
+  image: python:3.10
+  dependencies:
+    - install_backend_dependencies
+  script:
+    - cd backend
+    - source venv/bin/activate
+    - pytest tests/test_unit_weather.py
+
+test_mocked_db:
+  stage: test
+  image: python:3.10
+  dependencies:
+    - install_backend_dependencies
+  script:
+    - cd backend
+    - source venv/bin/activate
+    - pytest tests/test_mocked_db.py
+
+test_integration_auth:
+  stage: test
+  image: python:3.10
+  dependencies:
+    - install_backend_dependencies
+  script:
+    - cd backend
+    - source venv/bin/activate
+    - pytest tests/test_integration_auth.py
+
+test_integration_activities:
+  stage: test
+  image: python:3.10
+  dependencies:
+    - install_backend_dependencies
+  script:
+    - cd backend
+    - source venv/bin/activate
+    - pytest tests/test_integration_activities.py
+
+# build
+frontend_build:
+  stage: build
+  image: node:20
+  dependencies:
+    - install_frontend_dependencies
+  script:
+    - cd frontend
+    - npm run build
+  artifacts:
+    paths:
+      - frontend/dist
