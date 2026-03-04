@@ -1,0 +1,6 @@
+{
+  "Warszawa": {"temperature": 15, "windspeed": 10, "precipitation": 0},
+  "Gdansk": {"temperature": 10, "windspeed": 25, "precipitation": 5},
+  "Krakow": {"temperature": 18, "windspeed": 5, "precipitation": 0},
+  "Poznan": {"temperature": 12, "windspeed": 15, "precipitation": 2}
+}

@@ -7,6 +7,27 @@ from bson.objectid import ObjectId
 activities_bp = Blueprint('activities', __name__)
 db = get_db()
 
+# --- LOGIKA BIZNESOWA (to testujemy jednostkowo) ---
+
+def przygotuj_aktywnosc(username, name, city, description, planned_date, planned_time, weather_func):
+    """Tworzy słownik z nową aktywnością, pobierając pogodę"""
+    weather = weather_func(city, planned_date, planned_time)
+    
+    return {
+        "username": username,
+        "name": name,
+        "description": description or '',
+        "city": city,
+        "planned_date": planned_date or '',
+        "planned_time": planned_time or '',
+        "temperature": weather.get('temperature', 0),
+        "windspeed": weather.get('windspeed', 0),
+        "precipitation": weather.get('precipitation', 0),
+        "timestamp": datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+    }
+
+# --- ENDPOINTY ---
+
 @activities_bp.route('', methods=['GET'])
 def get_activities():
     if db is None: return jsonify([])
@@ -21,21 +42,18 @@ def get_activities():
 def add_activity():
     if db is None: return jsonify({"error": "brak bazy"}), 500
     data = request.json
-    weather = get_weather_data(data['city'], data.get('planned_date'), data.get('planned_time'))
     
-    new_act = {
-        "username": data['username'],
-        "name": data['name'],
-        "description": data.get('description', ''),
-        "city": data['city'],
-        "planned_date": data.get('planned_date', ''),
-        "planned_time": data.get('planned_time', ''),
-        "temperature": weather.get('temperature', 0),
-        "windspeed": weather.get('windspeed', 0),
-        "precipitation": weather.get('precipitation', 0),
-        "timestamp": datetime.now().strftime("%Y-%m-%d %H:%M:%S")
-    }
-    db.activities.insert_one(new_act)
+    nowa_act = przygotuj_aktywnosc(
+        data['username'], 
+        data['name'], 
+        data['city'], 
+        data.get('description'), 
+        data.get('planned_date'), 
+        data.get('planned_time'),
+        get_weather_data
+    )
+    
+    db.activities.insert_one(nowa_act)
     return jsonify({"success": True})
 
 @activities_bp.route('/<id>', methods=['PUT'])
