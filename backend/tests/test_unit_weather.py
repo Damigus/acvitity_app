@@ -23,7 +23,7 @@ def test_nieznane_miasto_prawdziwe_api(dziwne_miasto):
 
 def test_zla_data_przeszlosc_prawdziwe_api():
     # dajemy date z przeszlosci
-    # prawdziwe api nie ma prognozy na 1999 rok w darmowym planie
+    # prawdziwe api nie ma prognozy na 1999 rok w darmowym planie / maksymalnie na 2022
     wynik = get_weather_data("Warszawa", "1999-01-01", "12:00")
     
     # nasz kod w weather py w razie braku daty w time zwraca same zera

@@ -2,14 +2,14 @@
 import random
 
 def test_dodawanie_i_usuwanie_wpisu(client):
-    losowa_nazwa = f"Kino z klasa {random.randint(1, 10000)}"
+    losowa_nazwa = f"Kino {random.randint(1, 10000)}"
     user = "TEST_uczen"
     
     # dodajemy nowy wpis na wyjscie
     odp = client.post('/activity', json={
         "username": user,
         "name": losowa_nazwa,
-        "description": "Idziemy na Diune",
+        "description": "Film 365 dni",
         "city": "Warszawa",
         "planned_date": "2026-03-10",
         "planned_time": "18:00"
