@@ -11,7 +11,8 @@ from database import get_db
 @pytest.fixture
 def client():
     # uzywamy prawdziwej bazy danych z dockera
-    os.environ["MONGO_URI"] = "mongodb://localhost:27017/"
+    if "MONGO_URI" not in os.environ:
+        os.environ["MONGO_URI"] = "mongodb://localhost:27017/"
     
     # wlaczamy tryb testowy we flasku
     app.config['TESTING'] = True

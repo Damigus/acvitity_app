@@ -18,7 +18,7 @@ install_backend_dependencies:
     - cd backend
     - python -m venv venv
     - source venv/bin/activate
-    - pip install -r requirements.txt
+    - pip install -r requirements.txt pytest-cov
   artifacts:
     paths:
       - backend/venv
@@ -28,11 +28,10 @@ install_frontend_dependencies:
   stage: install
   image: node:20
   script:
-    - cd frontend
     - npm install
   artifacts:
     paths:
-      - frontend/node_modules
+      - node_modules
     expire_in: 1h
 
 # testy
@@ -44,7 +43,10 @@ test_unit_weather:
   script:
     - cd backend
     - source venv/bin/activate
-    - pytest tests/test_unit_weather.py
+    - pytest --cov=. --cov-report=xml:coverage-weather.xml tests/test_unit_weather.py
+  artifacts:
+    reports:
+      cobertura: backend/coverage-weather.xml
 
 test_mocked_db:
   stage: test
@@ -54,7 +56,10 @@ test_mocked_db:
   script:
     - cd backend
     - source venv/bin/activate
-    - pytest tests/test_mocked_db.py
+    - pytest --cov=. --cov-report=xml:coverage-mocked.xml tests/test_mocked_db.py
+  artifacts:
+    reports:
+      cobertura: backend/coverage-mocked.xml
 
 test_integration_auth:
   stage: test
@@ -64,7 +69,10 @@ test_integration_auth:
   script:
     - cd backend
     - source venv/bin/activate
-    - pytest tests/test_integration_auth.py
+    - pytest --cov=. --cov-report=xml:coverage-auth.xml tests/test_integration_auth.py
+  artifacts:
+    reports:
+      cobertura: backend/coverage-auth.xml
 
 test_integration_activities:
   stage: test
@@ -74,7 +82,10 @@ test_integration_activities:
   script:
     - cd backend
     - source venv/bin/activate
-    - pytest tests/test_integration_activities.py
+    - pytest --cov=. --cov-report=xml:coverage-activities.xml tests/test_integration_activities.py
+  artifacts:
+    reports:
+      cobertura: backend/coverage-activities.xml
 
 # build
 frontend_build:
@@ -83,7 +94,6 @@ frontend_build:
   dependencies:
     - install_frontend_dependencies
   script:
-    - cd frontend
     - npm run build
   artifacts:
     paths:
