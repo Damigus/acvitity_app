@@ -1,5 +1,5 @@
 {
-  "name": "Activity Weather Tracker",
-  "description": "A simple app to log activities with current weather data.",
+  "name": "App",
+  "description": "A simple app.",
   "requestFramePermissions": []
 }
