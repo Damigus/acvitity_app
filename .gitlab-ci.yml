@@ -43,12 +43,13 @@ test_unit_weather:
   script:
     - cd backend
     - source venv/bin/activate
-    - pytest --cov=. --cov-report=xml:coverage-weather.xml tests/test_unit_weather.py
+    - pytest --cov=. --cov-report=xml:coverage-weather.xml --junitxml=report-weather.xml tests/test_unit_weather.py
   artifacts:
     reports:
       coverage_report:
         coverage_format: cobertura
         path: backend/coverage-weather.xml
+      junit: backend/report-weather.xml
 
 test_mocked_db:
   stage: test
@@ -58,12 +59,13 @@ test_mocked_db:
   script:
     - cd backend
     - source venv/bin/activate
-    - pytest --cov=. --cov-report=xml:coverage-mocked.xml tests/test_mocked_db.py
+    - pytest --cov=. --cov-report=xml:coverage-mocked.xml --junitxml=report-mocked.xml tests/test_mocked_db.py
   artifacts:
     reports:
       coverage_report:
         coverage_format: cobertura
         path: backend/coverage-mocked.xml
+      junit: backend/report-mocked.xml
 
 test_integration_auth:
   stage: test
@@ -73,12 +75,13 @@ test_integration_auth:
   script:
     - cd backend
     - source venv/bin/activate
-    - pytest --cov=. --cov-report=xml:coverage-auth.xml tests/test_integration_auth.py
+    - pytest --cov=. --cov-report=xml:coverage-auth.xml --junitxml=report-auth.xml tests/test_integration_auth.py
   artifacts:
     reports:
       coverage_report:
         coverage_format: cobertura
         path: backend/coverage-auth.xml
+      junit: backend/report-auth.xml
 
 test_integration_activities:
   stage: test
@@ -88,12 +91,13 @@ test_integration_activities:
   script:
     - cd backend
     - source venv/bin/activate
-    - pytest --cov=. --cov-report=xml:coverage-activities.xml tests/test_integration_activities.py
+    - pytest --cov=. --cov-report=xml:coverage-activities.xml --junitxml=report-activities.xml tests/test_integration_activities.py
   artifacts:
     reports:
       coverage_report:
         coverage_format: cobertura
         path: backend/coverage-activities.xml
+      junit: backend/report-activities.xml
 
 # build
 frontend_build:
