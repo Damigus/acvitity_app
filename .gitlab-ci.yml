@@ -46,7 +46,9 @@ test_unit_weather:
     - pytest --cov=. --cov-report=xml:coverage-weather.xml tests/test_unit_weather.py
   artifacts:
     reports:
-      cobertura: backend/coverage-weather.xml
+      coverage_report:
+        coverage_format: cobertura
+        path: backend/coverage-weather.xml
 
 test_mocked_db:
   stage: test
@@ -59,7 +61,9 @@ test_mocked_db:
     - pytest --cov=. --cov-report=xml:coverage-mocked.xml tests/test_mocked_db.py
   artifacts:
     reports:
-      cobertura: backend/coverage-mocked.xml
+      coverage_report:
+        coverage_format: cobertura
+        path: backend/coverage-mocked.xml
 
 test_integration_auth:
   stage: test
@@ -72,7 +76,9 @@ test_integration_auth:
     - pytest --cov=. --cov-report=xml:coverage-auth.xml tests/test_integration_auth.py
   artifacts:
     reports:
-      cobertura: backend/coverage-auth.xml
+      coverage_report:
+        coverage_format: cobertura
+        path: backend/coverage-auth.xml
 
 test_integration_activities:
   stage: test
@@ -85,7 +91,9 @@ test_integration_activities:
     - pytest --cov=. --cov-report=xml:coverage-activities.xml tests/test_integration_activities.py
   artifacts:
     reports:
-      cobertura: backend/coverage-activities.xml
+      coverage_report:
+        coverage_format: cobertura
+        path: backend/coverage-activities.xml
 
 # build
 frontend_build:
