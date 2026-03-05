@@ -59,7 +59,7 @@ unit_tests:
   script:
     - cd backend
     - source venv/bin/activate
-    - pytest --cov=. --cov-report=xml:coverage-mocked.xml --junitxml=report-mocked.xml tests/unit_tests.py
+    - pytest --cov=. --cov-report=xml:coverage-mocked.xml --junitxml=report-mocked.xml tests/test_unit.py
   artifacts:
     reports:
       coverage_report:
