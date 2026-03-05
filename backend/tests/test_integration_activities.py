@@ -57,7 +57,7 @@ def test_edycja_wpisu_innego_usera(client):
     dane = client.get('/activity').json
     wpis_id = next(w for w in dane if w["name"] == losowa_nazwa)["_id"]
     
-    # proba edycji przez hakera
+    # proba edycji przez tigera bonzo
     odp_edycja = client.put(f'/activity/{wpis_id}', json={
         "username": user_haker,
         "name": "Zhakowane kino",

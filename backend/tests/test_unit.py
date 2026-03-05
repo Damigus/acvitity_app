@@ -74,6 +74,8 @@ def test_jednostkowy_pogoda_z_pliku():
     pogoda_z_pliku = wczytaj_dane(WEATHER_FILE)
     miasto = "Warszawa"
     assert pogoda_z_pliku[miasto]["temperature"] == 15
+    assert pogoda_z_pliku[miasto]["windspeed"] == 10
+    assert pogoda_z_pliku[miasto]["precipitation"] == 0
 
 def test_jednostkowy_dodawanie_aktywnosci():
     def udawana_pogoda(miasto, data, czas):
@@ -93,6 +95,8 @@ def test_jednostkowy_dodawanie_aktywnosci():
         
         assert nowa_act["name"] == "Bieganie"
         assert nowa_act["temperature"] == 15
+        assert nowa_act["windspeed"] == 10
+        assert nowa_act["precipitation"] == 0
         assert nowa_act["username"] == "adam"
     finally:
         # przywracamy oryginal zeby nie psuć innych testow
